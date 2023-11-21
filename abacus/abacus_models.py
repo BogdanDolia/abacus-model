@@ -62,19 +62,11 @@ class Abacus:
 
         for i in range(len(self.rods)):
             digit = (number % 10) + carry
-
-            # print(f"Before number: {number}")
             number //= 10
 
             # Update current rod and calculate carry
             new_value = self.rods[i].value() + digit
-
-            # print(f"digit: {digit} | carry: {carry} | number: {number} | number % 10: {number % 10} |"
-            #       f" new_value: {new_value} | new_value % 10: {new_value % 10} |")
-
             carry = new_value // 10
-            # print(f"After carry: {carry}")
-
             self.rods[i].set_value(new_value % 10)
 
             # If there's no more number and no carry, break the loop
