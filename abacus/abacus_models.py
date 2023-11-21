@@ -112,7 +112,6 @@ class Abacus:
         display_rows = [''] * 7
         for rod in reversed(self.rods):
             rod_display = modify_displayed_list(rod.display())
-            # rod_display = rod.display()
             for i in range(7):
                 display_rows[i] += ' * ' if rod_display[i] else ' | '
                 display_rows[i] += ' '
