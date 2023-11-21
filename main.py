@@ -4,17 +4,12 @@
 from abacus import abacus_models
 
 # Example usage
-abacus = abacus_models.Abacus()
-# abacus.add(4)
-abacus.add(180)
-# abacus.add(40)
-# abacus.add(8)
-
+abacus = abacus_models.Abacus(rods=10)
+abacus.add(3)
+abacus.add(700)
+# abacus.add(600)
+# abacus.add(30)
+abacus.subtract(5)
+abacus.subtract(1)
 print(abacus.display())
-# abacus.reset()
-# print(abacus.display())
-# print("\n\n")
-# abacus.subtract(0)
-# print(abacus.display())
-# abacus.reset()
-# print(abacus.display())
+print(abacus.current_value())

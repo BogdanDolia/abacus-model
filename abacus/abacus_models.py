@@ -33,13 +33,10 @@ def modify_displayed_list(lst_original):
 
     # Additional rules based on the state of the 3rd, 4th, 5th, and 6th elements
     if lst[2] == 1 and lst[3] == 0 and lst[4] == 0 and lst[5] == 0 and lst[6] == 0:
-        print("catch")
         lst[4:6] = [1, 1, 1]
     if lst[2] == 1 and lst[3] == 1 and lst[4] == 0 and lst[5] == 0 and lst[6] == 0:
-        print("catch")
         lst[5:6] = [1, 1]
     if lst[2] == 1 and lst[3] == 1 and lst[4] == 1 and lst[5] == 0 and lst[6] == 0:
-        print("catch")
         lst[6] = [1]
 
     return lst
@@ -48,9 +45,21 @@ def modify_displayed_list(lst_original):
 class Abacus:
     def __init__(self, rods=10):
         self.rods = [BiQuinaryRod() for _ in range(rods)]
+        self.max_value = int('9' * rods)
+
+    def current_value(self):
+        total = 0
+        for i, rod in enumerate(self.rods):
+            total += rod.value() * (10 ** i)
+        return total
 
     def add(self, number):
+
+        if number > self.max_value or self.current_value() + number > self.max_value:
+            raise ValueError("Adding error: Number too large to be represented")
+
         carry = 0
+
         for i in range(len(self.rods)):
             digit = (number % 10) + carry
 
@@ -72,10 +81,38 @@ class Abacus:
             if number == 0 and carry == 0:
                 break
 
+    def subtract(self, number):
+
+        if number > self.current_value():
+            raise ValueError("Subtraction error: Number too large to subtract")
+
+        borrow = 0
+        for i in range(len(self.rods)):
+            # Adjust digit with current borrow
+            digit = (number % 10) + borrow
+            number //= 10
+
+            # Calculate the new value considering borrow
+            new_value = self.rods[i].value() - digit
+
+            # If new value is negative, set borrow for the next rod
+            if new_value < 0 and i < len(self.rods) - 1:
+                borrow = 1
+                new_value += 10  # Adjust new value after borrowing
+            else:
+                borrow = 0
+
+            self.rods[i].set_value(new_value)
+
+            # Break if no more number to subtract and no borrow
+            if number == 0 and borrow == 0:
+                break
+
     def display(self):
         display_rows = [''] * 7
         for rod in reversed(self.rods):
             rod_display = modify_displayed_list(rod.display())
+            # rod_display = rod.display()
             for i in range(7):
                 display_rows[i] += ' * ' if rod_display[i] else ' | '
                 display_rows[i] += ' '
